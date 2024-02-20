@@ -1,20 +1,34 @@
 import pandas as pd 
 import numpy as np 
-
+import composite_strategy, data_fetcher, indicator_calculator
+import signal_determiner, signal_printer
 class Backtester:
-    
-    def __init__(self, data, h_period, l_period, adx_period, trailing_stop_pips):
-        
-        self.data = data
-        self.h_period = h_period
-        self.l_period = l_period
-        self.adx_period = adx_period
-        self.trailing_stop_pips = trailing_stop_pips
-        self.equity_curve = []
+    def __init__(self, strategy):
+        strategy = signal_determiner()
+        self.strategy = strategy
+
+    def run_backtest(self, historical_data):
+       
+        # create a copy of the data to avoid modifying the original
+        df = pd.DataFrame(historical_data.copy(),columns=['timestamp', 'open', 'high','low', 'close', 'volume'])
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit ='ms')
+        df.set_index('timestamp', inplace=True)
+
+        # calculate indicators using the trading strategy
+        df = self.strategy.indicator_calculator(df)
+
+        # apply the trading strategy to determine signals
+        df = self.strategy.signal_determiner(df)
+
+        # simulate trading based on signals
+        self.simulate_trading(df)
 
 
-        def run_backtest(self):
-            signals = self.generate_signals()
-            self.calculate_equity_curve(signals)
+    def simulate_trading(self, df):
+        # <TODO> implement me
+        pass
 
-        def generate_signals
+if __name__ == "__main__":
+
+    # <TODO> implement me, override deprecated main 
+    pass
