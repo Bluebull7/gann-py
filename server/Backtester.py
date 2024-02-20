@@ -28,8 +28,21 @@ class Backtester:
 
 
     def simulate_trading(self, df):
-        # <TODO> implement me
-        pass
+        equity_curve = [1.0]
+
+        # buy = 1 , sell = -1
+        for i in range(1, len(df)):
+            # simulate decisions based on signals from SD
+            signal = df['Signal'].iloc[i]
+            if signal == 1:
+                equity_curve.append(equity_curve[-1] * (1 + df['close'].pct_change().iloc[i]))
+            elif signal == -1
+                equity_curve.append(equity_curve[-1] * (1 - df['close'].pct_change().iloc[i]))
+            else:
+                equity_curve.append(equity_curve[-1])
+        df['EquityCurve'] = equity_curve
+        print(df[['close', 'SMA_High', 'SMA_Low', 'ADX', 'BuySignal', 'SellSignal', 'EquityCurve']])
+    pass
 
 if __name__ == "__main__":
 
